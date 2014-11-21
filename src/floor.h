@@ -8,8 +8,9 @@
 class Floor {
     Chamber *chamber[5];
     TextDisplay *display;
+    Cell **grid;
   public:
-    Floor(TextDisplay *display);
+    Floor(TextDisplay *display, char *configuration_file = NULL);
     Floor(const Floor &floor);
     ~Floor();
 
