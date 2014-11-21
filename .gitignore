@@ -1,0 +1,8 @@
+# executable
+cc3k
+
+# binary files
+*.o
+*.d
+
+.sw*
