@@ -2,6 +2,7 @@
 #define __FLOOR_H__
 
 #include <iostream>
+#include <vector>
 
 #include "cell.h"
 #include "chamber.h"
@@ -10,7 +11,12 @@
 class Floor {
     Chamber *chamber[5];
     TextDisplay *display;
-    Cell **grid;
+    Cell ***grid;
+
+    //std::vector<Hostile*>;
+    //std::vector<Potion*>;
+    //std::vector<Gold*>;
+
   public:
     Floor(TextDisplay *display);
     Floor(const Floor &floor);
@@ -18,7 +24,7 @@ class Floor {
 
     void generate();
 
-    friend std::istream &operator>>(std::istream &in, const Floor &floor);
+    friend std::istream &operator>>(std::istream &in, Floor &floor);
 };
 
 #endif
