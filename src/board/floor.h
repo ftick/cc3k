@@ -3,20 +3,22 @@
 
 #include <iostream>
 
+#include "cell.h"
 #include "chamber.h"
+#include "text_display.h"
 
 class Floor {
     Chamber *chamber[5];
     TextDisplay *display;
     Cell **grid;
   public:
-    Floor(TextDisplay *display, char *configuration_file = NULL);
+    Floor(TextDisplay *display);
     Floor(const Floor &floor);
     ~Floor();
 
     void generate();
 
-    friend std::istream &operator>>(std::istream &in, const &Floor floor);
+    friend std::istream &operator>>(std::istream &in, const Floor &floor);
 };
 
 #endif
