@@ -1,11 +1,11 @@
 CXX = g++
 CXXFLAGS = -Wall -Wextra -pedantic -MMD --std=c++03
 
-SRC = ${wildcard src/*.cc}
+SRC = ${shell find src -name '*.cc'}
 OBJ = ${SRC:.cc=.o}
 DEP = ${OBJ:.o=.d}
 
-MAIN = cc3k
+MAIN = bin/cc3k
 
 build: ${SRC} ${MAIN}
 
