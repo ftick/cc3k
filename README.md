@@ -8,7 +8,7 @@ http://en.wikipedia.org/wiki/Rogue_(video_game)
 
 ```
 make
-./cc3k
+bin/cc3k
 ```
 
 ## Game
