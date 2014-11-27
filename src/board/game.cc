@@ -49,6 +49,7 @@ direction_t read_direction() {
 
 void Game::play() {
   PlayerCharacter *p = pc;
+  std::cout << *floor;
   do {
     char c;
     std::cin >> c;

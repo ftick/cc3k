@@ -3,6 +3,8 @@
 
 #include "../board/cell.h"
 
+class Cell;
+
 class Widget {
   public:
     operator char();

@@ -1,7 +1,7 @@
 #include "floor.h"
 
-const int FLOOR_ROWS = 79;
-const int FLOOR_COLS = 25;
+const int FLOOR_ROWS = 25;
+const int FLOOR_COLS = 79;
 
 Floor::Floor(TextDisplay *display) : display(display) {}
 
@@ -23,7 +23,7 @@ std::istream &operator>>(std::istream &in, Floor &floor) {
     floor.grid[row] = new Cell*[FLOOR_COLS];
     for (int col = 0; col < FLOOR_COLS; col++) {
       char c;
-      in >> c;
+      in >> std::noskipws >> c;
       switch (c) {
         case '|': floor.grid[row][col] = new Cell(row, col, floor.display, V_WALL); break;
         case '-': floor.grid[row][col] = new Cell(row, col, floor.display, H_WALL); break;
@@ -33,6 +33,7 @@ std::istream &operator>>(std::istream &in, Floor &floor) {
         default:  floor.grid[row][col] = NULL; break;
       }
     }
+    in.get();
   }
 
   for (int row = 1; row < FLOOR_ROWS - 1; row++) {
@@ -50,4 +51,16 @@ std::istream &operator>>(std::istream &in, Floor &floor) {
   }
 
   return in;
+}
+
+std::ostream &operator<<(std::ostream &out, Floor &floor) {
+  for (int row = 0; row < FLOOR_ROWS; row++) {
+    for (int col = 0; col < FLOOR_COLS; col++) {
+      if (floor.grid[row][col]) out << *floor.grid[row][col];
+      else out << ' ';
+    }
+    out << std::endl;
+  }
+
+  return out;
 }
