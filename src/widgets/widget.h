@@ -6,8 +6,13 @@
 class Cell;
 
 class Widget {
+    Cell *pos;
   public:
-    operator char();
+    Widget();
+    void set_pos(Cell *pos);
+    Cell *get_pos() const;
+    virtual char to_char() const = 0;
+    virtual ~Widget() = 0;
 };
 
 #endif

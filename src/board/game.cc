@@ -1,4 +1,5 @@
 #include "game.h"
+#include "../debug.h"
 
 #include <fstream>
 
@@ -24,7 +25,7 @@ Game::Game(const char *init_file) : level(1) {
   floor = new Floor(td);
   init >> *floor;
   
-  if (!init_file) floor->generate();
+  if (!init_file) floor->generate(pc);
 }
 
 direction_t decode_direction(char dir[2]) {
@@ -49,10 +50,15 @@ direction_t read_direction() {
 
 void Game::play() {
   PlayerCharacter *p = pc;
-  std::cout << *floor;
+
   do {
     char c;
+    bool success;
+
+    std::cout << *floor;
     std::cin >> c;
+
+    pc->take_turn();
 
     switch (c) {
       case 'q': quit = true; return;
@@ -73,12 +79,22 @@ void Game::play() {
         char code[2] = { c };
         std::cin >> code[1];
         direction_t dir = decode_direction(code);
-        //p->move(dir);
+        success = p->move(dir);
       }
     }
 
-    if (level == 6) break;
+    if (!success) {
+      DEBUG("Can't do that!");
+    }
+
+    if (p->has_reached_stair()) {
+      DEBUG("Stair reached!");
+      if (++level == 6) break;
+    }
+
   } while (!is_lost());
+
+  std::cout << "Game over" << std::endl;
 }
 
 bool Game::is_won() {

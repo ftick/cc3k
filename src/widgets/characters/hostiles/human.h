@@ -4,6 +4,9 @@
 #include "hostile.h"
 
 class Human : public Hostile {
+  public:
+    Human();
+    char to_char() const;
 };
 
 #endif

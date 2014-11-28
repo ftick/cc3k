@@ -4,6 +4,9 @@
 #include "hostile.h"
 
 class Merchant : public Hostile {
+  public:
+    Merchant();
+    char to_char() const;
 };
 
 #endif

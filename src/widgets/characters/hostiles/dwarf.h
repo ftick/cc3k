@@ -4,6 +4,9 @@
 #include "hostile.h"
 
 class Dwarf : public Hostile {
+  public:
+    Dwarf();
+    char to_char() const;
 };
 
 #endif

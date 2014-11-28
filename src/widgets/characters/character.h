@@ -10,9 +10,11 @@ class Character : public Widget {
     int def;
     int gold;
     bool moved;
+    bool at_stair;
 
   public:
     Character(int health, int max_health, int atk, int def);
+    virtual bool is_pathable(terrain_t t) const;
     virtual bool move(direction_t dir);
     virtual void attack(Character &other);
     virtual bool defend(Character &other);

@@ -2,6 +2,7 @@
 #include <algorithm>
 
 Character::Character(int health, int max_health, int atk, int def) :
+  Widget(),
   health(health),
   max_health(max_health),
   atk(atk),
@@ -9,8 +10,28 @@ Character::Character(int health, int max_health, int atk, int def) :
   gold(0),
   moved(false) {}
 
+bool Character::is_pathable(terrain_t t) const {
+  return t == TILE;
+}
+
 bool Character::move(direction_t dir) {
-  return false;
+  Cell *neighbour = get_pos()->get_neighbour(dir);
+  moved = true;
+
+  if (!neighbour)
+    return false;
+
+  if (neighbour->get_widget())
+    return false;
+
+  if (!is_pathable(neighbour->get_terrain()))
+    return false;
+
+  neighbour->set_widget(this);
+  get_pos()->set_widget(NULL);
+  set_pos(neighbour);
+
+  return true;
 }
 
 void Character::attack(Character &other) {

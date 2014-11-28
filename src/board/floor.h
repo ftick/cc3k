@@ -7,22 +7,28 @@
 #include "cell.h"
 #include "chamber.h"
 #include "text_display.h"
+#include "../widgets/characters/player_characters/player_character.h"
+#include "../widgets/characters/hostiles/hostile.h"
+#include "../widgets/items/potion.h"
+#include "../widgets/items/gold.h"
 
 class Floor {
-    Chamber *chamber[5];
     TextDisplay *display;
     Cell ***grid;
 
-    //std::vector<Hostile*>;
-    //std::vector<Potion*>;
-    //std::vector<Gold*>;
+    std::vector<Chamber*> chambers;
+    std::vector<Hostile*> hostiles;
+    std::vector<Potion*>  potions;
+    std::vector<Gold*>    gold;
+
+    void random_chamber_spawn(Widget * w);
 
   public:
     Floor(TextDisplay *display);
-    Floor(const Floor &floor);
     ~Floor();
 
-    void generate();
+    Floor *copy() const;
+    void generate(PlayerCharacter *pc);
 
     friend std::istream &operator>>(std::istream &in, Floor &floor);
     friend std::ostream &operator<<(std::ostream &out, Floor &floor);
