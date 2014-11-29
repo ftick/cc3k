@@ -9,9 +9,8 @@ void Chamber::add_cell(Cell *c) {
 }
 
 void Chamber::spawn(Widget *w) {
-  int orig;
-  int i = rand() % cells.size();
-  orig = i;
+  int i    = rand() % cells.size();
+  int orig = i;
 
   DEBUG("spawning at " << i << " of " << cells.size());
 
@@ -23,7 +22,6 @@ void Chamber::spawn(Widget *w) {
     }
   }
 
-  cells[i]->set_widget(w);
   w->set_pos(cells[i]);
 }
 

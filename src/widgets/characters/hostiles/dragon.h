@@ -2,8 +2,15 @@
 #define __DRAGON_H__
 
 #include "hostile.h"
+#include "../../items/gold/dragon_hoard.h"
+
+class DragonHoard;
 
 class Dragon : public Hostile {
+    DragonHoard *hoard;
+  public:
+    Dragon(DragonHoard *hoard);
+    char to_char() const;
 };
 
 #endif

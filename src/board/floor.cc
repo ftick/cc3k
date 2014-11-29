@@ -1,19 +1,32 @@
+#include <cstdlib>
+#include <algorithm>
+
 #include "floor.h"
 #include "../debug.h"
 #include "../factories/hostile_factory.h"
 #include "../factories/potion_factory.h"
 #include "../factories/gold_factory.h"
-#include <cstdlib>
-#include <algorithm>
+#include "../widgets/characters/hostiles/human.h"
+#include "../widgets/characters/hostiles/dwarf.h"
+#include "../widgets/characters/hostiles/halfling.h"
+#include "../widgets/characters/hostiles/elf.h"
+#include "../widgets/characters/hostiles/orc.h"
+#include "../widgets/characters/hostiles/merchant.h"
+#include "../widgets/items/gold/dragon_hoard.h"
+#include "../widgets/items/gold/merchant_hoard.h"
+#include "../widgets/items/gold/small_gold_pile.h"
+#include "../widgets/items/gold/normal_gold_pile.h"
+#include "../widgets/items/potions/wounddef.h"
+#include "../widgets/items/potions/woundatk.h"
+#include "../widgets/items/potions/boostdef.h"
+#include "../widgets/items/potions/boostatk.h"
+#include "../widgets/items/potions/restorehealth.h"
+#include "../widgets/items/potions/poisonhealth.h"
 
 const int FLOOR_ROWS = 25;
 const int FLOOR_COLS = 79;
 
-Floor::Floor(TextDisplay *display) : display(display) {
-  hostiles.resize(20);
-  potions.resize(10);
-  gold.resize(10);
-}
+Floor::Floor(TextDisplay *display, PlayerCharacter *pc) : display(display), pc(pc) {}
 
 Floor::~Floor() {
   for (int row = 0; row < FLOOR_ROWS; row++) {
@@ -32,7 +45,7 @@ Floor::~Floor() {
   DEBUG("Done freeing floor");
 }
 
-void Floor::generate(PlayerCharacter *pc) {
+void Floor::generate() {
   int pc_chamber    = rand() % chambers.size();
   int stair_chamber = rand() % chambers.size();
 
@@ -48,6 +61,10 @@ void Floor::generate(PlayerCharacter *pc) {
   chambers[stair_chamber]->make_stair();
 
   DEBUG("Player character and stair added");
+
+  hostiles.resize(20);
+  potions.resize(10);
+  gold.resize(10);
 
   std::generate(potions.begin(), potions.end(), PotionFactory::generator);
   DEBUG("Potions generated");
@@ -79,14 +96,43 @@ std::istream &operator>>(std::istream &in, Floor &floor) {
     for (int col = 0; col < FLOOR_COLS; col++) {
       char c;
       in >> std::noskipws >> c;
+
       switch (c) {
-        case '|': floor.grid[row][col] = new Cell(row, col, floor.display, V_WALL); break;
-        case '-': floor.grid[row][col] = new Cell(row, col, floor.display, H_WALL); break;
-        case '.': floor.grid[row][col] = new Cell(row, col, floor.display, TILE); break;
-        case '+': floor.grid[row][col] = new Cell(row, col, floor.display, DOOR); break;
-        case '#': floor.grid[row][col] = new Cell(row, col, floor.display, PATHWAY); break;
-        default:  floor.grid[row][col] = NULL; break;
+        case ' ':  floor.grid[row][col] = NULL; continue;
+        case '|':  floor.grid[row][col] = new Cell(row, col, floor.display, V_WALL); continue;
+        case '-':  floor.grid[row][col] = new Cell(row, col, floor.display, H_WALL); continue;
+        case '.':  floor.grid[row][col] = new Cell(row, col, floor.display, TILE); continue;
+        case '+':  floor.grid[row][col] = new Cell(row, col, floor.display, DOOR); continue;
+        case '#':  floor.grid[row][col] = new Cell(row, col, floor.display, PATHWAY); continue;
+        case '\\': floor.grid[row][col] = new Cell(row, col, floor.display, STAIR); continue;
+        default: break;
       }
+
+      Cell *cell = floor.grid[row][col] = new Cell(row, col, floor.display, TILE);
+      Widget *w;
+
+      switch (c) {
+        case '@': w = floor.pc; break;
+        case 'E': w = new Elf(); floor.hostiles.push_back(static_cast<Hostile*>(w)); break;
+        case 'H': w = new Human(); floor.hostiles.push_back(static_cast<Hostile*>(w)); break;
+        case 'D': w = new Dwarf(); floor.hostiles.push_back(static_cast<Hostile*>(w)); break;
+        case 'L': w = new Halfling(); floor.hostiles.push_back(static_cast<Hostile*>(w)); break;
+        case 'O': w = new Orc(); floor.hostiles.push_back(static_cast<Hostile*>(w)); break;
+        case 'M': w = new Merchant(); floor.hostiles.push_back(static_cast<Hostile*>(w)); break;
+        case '0': w = new RestoreHealth(); floor.potions.push_back(static_cast<Potion*>(w)); break;
+        case '1': w = new BoostAtk(); floor.potions.push_back(static_cast<Potion*>(w)); break;
+        case '2': w = new BoostDef(); floor.potions.push_back(static_cast<Potion*>(w)); break;
+        case '3': w = new PoisonHealth(); floor.potions.push_back(static_cast<Potion*>(w)); break;
+        case '4': w = new WoundAtk(); floor.potions.push_back(static_cast<Potion*>(w)); break;
+        case '5': w = new WoundDef(); floor.potions.push_back(static_cast<Potion*>(w)); break;
+        case '6': w = new NormalGoldPile(); floor.gold.push_back(static_cast<Gold*>(w)); break;
+        case '7': w = new SmallGoldPile(); floor.gold.push_back(static_cast<Gold*>(w)); break;
+        case '8': w = new MerchantHoard(); floor.gold.push_back(static_cast<Gold*>(w)); break;
+        case '9': w = new DragonHoard(false); floor.gold.push_back(static_cast<Gold*>(w)); break;
+        default: break;
+      }
+
+      w->set_pos(cell);
     }
     in.get();
   }

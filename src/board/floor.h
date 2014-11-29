@@ -14,6 +14,7 @@
 
 class Floor {
     TextDisplay *display;
+    PlayerCharacter *pc;
     Cell ***grid;
 
     std::vector<Chamber*> chambers;
@@ -24,10 +25,10 @@ class Floor {
     void random_chamber_spawn(Widget * w);
 
   public:
-    Floor(TextDisplay *display);
+    Floor(TextDisplay *display, PlayerCharacter *pc);
     ~Floor();
 
-    void generate(PlayerCharacter *pc);
+    void generate();
 
     friend std::istream &operator>>(std::istream &in, Floor &floor);
     friend std::ostream &operator<<(std::ostream &out, Floor &floor);

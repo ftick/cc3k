@@ -38,14 +38,13 @@ PlayerCharacter *select_player_character() {
   return new PlayerCharacter(120, 120, 25, 25);
 }
 
-Game::Game(const char *init_file) : level(1) {
-  std::ifstream init(init_file ? init_file : default_init_file);
-  td = new TextDisplay();
-  pc = select_player_character();
-  floor = new Floor(td);
-  init >> *floor;
-  floor->generate(pc);
-}
+Game::Game(const char *init_file) :
+    pc(select_player_character()),
+    td(new TextDisplay()),
+    floor(NULL),
+    quit(false),
+    random_generation(!init_file),
+    in(new std::ifstream(init_file ? init_file : default_init_file)) {}
 
 Game::~Game() {
   delete pc;
@@ -53,18 +52,34 @@ Game::~Game() {
 }
 
 void Game::play() {
+  for (int level = 1; level <= 5; ++level) {
+
+    DEBUG("Level: " << level);
+
+    delete floor;
+    floor = new Floor(td, pc);
+    *in >> *floor;
+    if (random_generation) floor->generate();
+    play_floor();
+    if (!pc->has_reached_stair()) return;
+  }
+
+  std::cout << "Game won!" << std::endl;
+}
+
+void Game::play_floor() {
   PlayerCharacter *p = pc;
 
   do {
-    char c;
+    char command;
     bool success = true;
 
     std::cout << *floor;
-    std::cin >> c;
+    std::cin >> command;
 
     pc->take_turn();
 
-    switch (c) {
+    switch (command) {
       case 'q': quit = true; return;
       case 'r': return;
       case 'u': {
@@ -86,39 +101,25 @@ void Game::play() {
       }
       default: {
         DEBUG("Moving");
-        char code[2] = { c };
+        char code[2] = { command };
         std::cin >> code[1];
         direction_t dir = decode_direction(code);
         success = p->move(dir);
       }
     }
 
+    DEBUG("Gold: " << pc->get_gold());
+
     if (!success) {
       DEBUG("Can't do that!");
     }
 
-    if (p->has_reached_stair()) {
-      DEBUG("Stair reached!");
-      delete floor;
-      floor = new Floor(td);
-      DEBUG("deleted floor!");
-      std::ifstream init(default_init_file);
-      init >> *floor;
-      DEBUG("Initialized floor");
-      floor->generate(pc);
-      DEBUG("Floor ready");
-      if (++level == 6) break;
-    }
-
-    DEBUG("Level: " << level);
-
+    if (p->has_reached_stair()) return;
   } while (!is_lost());
-
-  std::cout << "Game over" << std::endl;
 }
 
 bool Game::is_won() {
-  return level == 6;
+  return pc->has_reached_stair();
 }
 
 bool Game::is_lost() {

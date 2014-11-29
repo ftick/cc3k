@@ -1,5 +1,6 @@
 #include "cell.h"
 #include "../debug.h"
+#include <cstdlib>
 
 Cell::Cell(int row, int col, TextDisplay *display, terrain_t terrain) : row(row), col(col), display(display), terrain(terrain), widget(NULL), chamber(NULL) {}
 
@@ -34,6 +35,22 @@ void Cell::add_neighbour(direction_t dir, Cell* neighbour) {
 
 Cell *Cell::get_neighbour(direction_t dir) {
   return neighbours[dir];
+}
+
+Cell *Cell::get_unoccupied_tile_neighbour() {
+  int dir  = rand() % 8;
+  int orig = dir;
+
+  while (neighbours[static_cast<direction_t>(dir)]->get_terrain() != TILE ||
+         neighbours[static_cast<direction_t>(dir)]->get_widget()) {
+    dir++;
+    if (dir == orig) {
+      DEBUG("Unoccupied tile neighbour not found!");
+      return NULL;
+    }
+  }
+
+  return neighbours[static_cast<direction_t>(dir)];
 }
 
 void Cell::set_widget(Widget *w) {

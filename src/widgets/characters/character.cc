@@ -27,7 +27,6 @@ bool Character::move(direction_t dir) {
   if (!is_pathable(neighbour->get_terrain()))
     return false;
 
-  neighbour->set_widget(this);
   get_pos()->set_widget(NULL);
   set_pos(neighbour);
 

@@ -15,7 +15,7 @@ class Gold : public Item {
   public:
     Gold(int amount);
     char to_char() const;
-    PlayerCharacter *use(PlayerCharacter *pc);
+    virtual PlayerCharacter *use(PlayerCharacter *pc);
 };
 
 #endif

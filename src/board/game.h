@@ -5,12 +5,17 @@
 #include "floor.h"
 #include "../widgets/characters/player_characters/player_character.h"
 
+const int NUM_FLOORS = 5;
+
 class Game  {
     PlayerCharacter *pc;
     TextDisplay *td;
     Floor *floor;
     bool quit;
-    int level;
+    bool random_generation;
+    std::ifstream *in;
+
+    void play_floor();
     
   public:
     Game(const char *init_file);
