@@ -1,13 +1,11 @@
 #include "player_character.h"
-#include "../../items/gold.h"
+#include "../../items/gold/gold.h"
 
 PlayerCharacter::PlayerCharacter(int health, int max_health, int atk, int def) :
-  Character(health, max_health, atk, def),
-  at_stair(false) {}
+  Character(health, max_health, atk, def) {}
 
 void PlayerCharacter::take_turn() {
   Character::take_turn();
-  at_stair = false;
 }
 
 bool PlayerCharacter::is_pathable(terrain_t t) const {
@@ -28,7 +26,6 @@ bool PlayerCharacter::move(direction_t dir) {
   if (neighbour && neighbour->get_widget()) {
     if (Gold *gold = dynamic_cast<Gold*>(neighbour->get_widget())) {
       gold->use(this);
-      neighbour->set_widget(NULL);
     }
   }
 

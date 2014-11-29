@@ -4,7 +4,6 @@
 #include "../character.h"
 
 class PlayerCharacter : public Character {
-    bool at_stair;
   public:
     PlayerCharacter(int health, int max_health, int atk, int def);
     virtual void take_turn();

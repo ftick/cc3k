@@ -1,3 +1,5 @@
+#include <cstdlib>
+
 #include "hostile_factory.h"
 #include "../widgets/characters/hostiles/human.h"
 #include "../widgets/characters/hostiles/dwarf.h"

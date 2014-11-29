@@ -10,6 +10,8 @@ cat <<Doc
 #define $guard
 
 class $prog $@ {
+  public:
+    ${prog}();
 };
 
 #endif

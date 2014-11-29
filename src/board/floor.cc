@@ -1,6 +1,8 @@
 #include "floor.h"
 #include "../debug.h"
 #include "../factories/hostile_factory.h"
+#include "../factories/potion_factory.h"
+#include "../factories/gold_factory.h"
 #include <cstdlib>
 #include <algorithm>
 
@@ -18,10 +20,17 @@ Floor::~Floor() {
     for (int col = 0; col < FLOOR_COLS; col++) {
       delete grid[row][col];
     }
+    delete grid[row];
   }
-}
+  delete grid;
 
-Floor *Floor::copy() const {return NULL;}
+  for (std::vector<Chamber*>::iterator c = chambers.begin(); c != chambers.end(); c++) delete *c;
+  for (std::vector<Potion*>::iterator p = potions.begin(); p != potions.end(); p++) delete *p;
+  for (std::vector<Hostile*>::iterator h = hostiles.begin(); h != hostiles.end(); h++) delete *h;
+  for (std::vector<Gold*>::iterator g = gold.begin(); g != gold.end(); g++) delete *g;
+
+  DEBUG("Done freeing floor");
+}
 
 void Floor::generate(PlayerCharacter *pc) {
   int pc_chamber    = rand() % chambers.size();
@@ -33,17 +42,29 @@ void Floor::generate(PlayerCharacter *pc) {
     stair_chamber = (stair_chamber + 1) % chambers.size();
   }
 
+  DEBUG("Chambers given");
+
   chambers[pc_chamber]->spawn(pc);
   chambers[stair_chamber]->make_stair();
 
-  //std::generate(potions.begin(), potions.end(), PotionFactory::generator);
-  //for (std::vector<Potion*>::iterator p = potions.begin(); p != potions.end(); p++) random_chamber_spawn(*p);
+  DEBUG("Player character and stair added");
 
-  //std::generate(hostiles.begin(), hostiles.end(), GoldFactory::generator);
-  //for (std::vector<Gold*>::iterator g = widgets.begin(); g != widgets.end(); g++) random_chamber_spawn(*g);
+  std::generate(potions.begin(), potions.end(), PotionFactory::generator);
+  DEBUG("Potions generated");
+  for (std::vector<Potion*>::iterator p = potions.begin(); p != potions.end(); p++) random_chamber_spawn(*p);
+  DEBUG(potions.size() << " potions added");
+
+  std::generate(gold.begin(), gold.end(), GoldFactory::generator);
+  DEBUG("Gold generated");
+  for (std::vector<Gold*>::iterator g = gold.begin(); g != gold.end(); g++) random_chamber_spawn(*g);
+  DEBUG(gold.size() << " gold piles added");
 
   std::generate(hostiles.begin(), hostiles.end(), HostileFactory::generator);
+  DEBUG("Hostiles generated");
   for (std::vector<Hostile*>::iterator h = hostiles.begin(); h != hostiles.end(); h++) random_chamber_spawn(*h);
+  DEBUG(hostiles.size() << " hostiles added");
+
+  DEBUG("Floor generated");
 }
 
 void Floor::random_chamber_spawn(Widget *w) {
@@ -93,6 +114,7 @@ std::istream &operator>>(std::istream &in, Floor &floor) {
       Chamber *c = new Chamber();
       cell->set_chamber(c);
       floor.chambers.push_back(c);
+      DEBUG("Added chambers[" << floor.chambers.size() - 1 << "] = " << c);
     }
   }
 

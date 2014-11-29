@@ -7,8 +7,6 @@
 class Item : public Widget {
   public:
     Item();
-    virtual ~Item() = 0;
-
     virtual PlayerCharacter *use(PlayerCharacter* pc) = 0;
 };
 

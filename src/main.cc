@@ -3,10 +3,13 @@
 #include <sstream>
 
 #include "board/game.h"
+#include "debug.h"
 
 using namespace std;
 
 int main(int argc, char **argv) {
+  srand(time(NULL));
+
   char *floor_plan = NULL;
   if (argc >= 2) {
     floor_plan = argv[1];
@@ -35,6 +38,8 @@ int main(int argc, char **argv) {
     } else if (g->was_quit()) {
       exit = true;
     }
+
+    DEBUG("Deleting game...");
 
     delete g;
   } while (!exit);

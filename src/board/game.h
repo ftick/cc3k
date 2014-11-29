@@ -14,6 +14,7 @@ class Game  {
     
   public:
     Game(const char *init_file);
+    ~Game();
     void play();
     bool is_won();
     bool is_lost();

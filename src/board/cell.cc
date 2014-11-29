@@ -1,7 +1,7 @@
 #include "cell.h"
 #include "../debug.h"
 
-Cell::Cell(int row, int col, TextDisplay *display, terrain_t terrain) : row(row), col(col), display(display), terrain(terrain) {}
+Cell::Cell(int row, int col, TextDisplay *display, terrain_t terrain) : row(row), col(col), display(display), terrain(terrain), widget(NULL), chamber(NULL) {}
 
 terrain_t Cell::get_terrain() {
   return terrain;
@@ -18,7 +18,7 @@ Chamber* Cell::get_chamber() {
 void Cell::set_chamber(Chamber *c) {
   if ((terrain != TILE) || chamber) return;
 
-  DEBUG("setting chamber for (" << row << ", " << col << ") to " << c);
+  DEBUG("Setting cell (" << row << ", " << col << ") to " << c);
 
   chamber = c;
   c->add_cell(this);

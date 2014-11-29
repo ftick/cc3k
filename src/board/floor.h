@@ -9,8 +9,8 @@
 #include "text_display.h"
 #include "../widgets/characters/player_characters/player_character.h"
 #include "../widgets/characters/hostiles/hostile.h"
-#include "../widgets/items/potion.h"
-#include "../widgets/items/gold.h"
+#include "../widgets/items/potions/potion.h"
+#include "../widgets/items/gold/gold.h"
 
 class Floor {
     TextDisplay *display;
@@ -27,7 +27,6 @@ class Floor {
     Floor(TextDisplay *display);
     ~Floor();
 
-    Floor *copy() const;
     void generate(PlayerCharacter *pc);
 
     friend std::istream &operator>>(std::istream &in, Floor &floor);
