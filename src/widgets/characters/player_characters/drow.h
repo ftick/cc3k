@@ -4,6 +4,8 @@
 #include "player_character.h"
 
 class Drow : public PlayerCharacter {
+  public:
+    Drow();
 };
 
 #endif

@@ -11,6 +11,8 @@ class PlayerCharacter : public Character {
     bool has_reached_stair() const;
     bool is_pathable(terrain_t t) const;
     bool move(direction_t dir);
+    virtual int attack(Character &other);
+    virtual void did_kill(Character &c);
 };
 
 #endif

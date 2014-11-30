@@ -8,6 +8,6 @@ char Potion::to_char() const {
 }
 
 PlayerCharacter *Potion::use(PlayerCharacter *pc) {
-  DEBUG("TODO (potions)");
+  get_pos()->set_widget(NULL);
   return pc;
 }

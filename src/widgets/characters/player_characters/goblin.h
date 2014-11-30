@@ -4,6 +4,8 @@
 #include "player_character.h"
 
 class Goblin : public PlayerCharacter {
+  public:
+    Goblin();
 };
 
 #endif

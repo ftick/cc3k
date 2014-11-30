@@ -50,6 +50,7 @@ class Cell {
     void set_chamber(Chamber *c);
     void add_neighbour(direction_t dir, Cell *neighbour);
     Cell *get_neighbour(direction_t dir);
+    direction_t get_unoccupied_direction();
     Cell *get_unoccupied_tile_neighbour();
     void set_widget(Widget *w);
     Widget *get_widget();

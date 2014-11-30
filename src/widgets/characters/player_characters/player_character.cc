@@ -31,3 +31,13 @@ bool PlayerCharacter::move(direction_t dir) {
 
   return Character::move(dir);
 }
+
+int PlayerCharacter::attack(Character &other) {
+  int dmg = Character::attack(other);
+  if (!other.is_alive()) did_kill(other);
+  return dmg;
+}
+
+void PlayerCharacter::did_kill(Character &other) {
+  set_gold(get_gold() + other.get_gold());
+}

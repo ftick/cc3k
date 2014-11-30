@@ -4,6 +4,8 @@
 #include "player_character.h"
 
 class Shade : public PlayerCharacter {
+  public:
+    Shade();
 };
 
 #endif

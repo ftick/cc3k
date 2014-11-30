@@ -4,6 +4,8 @@
 #include "player_character.h"
 
 class Vampire : public PlayerCharacter {
+  public:
+    Vampire();
 };
 
 #endif

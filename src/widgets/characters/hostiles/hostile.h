@@ -7,6 +7,7 @@ class Hostile : public Character {
   public:
     Hostile(int health = 25, int atk = 25, int def = 25);
     virtual void take_turn();
+    virtual int  attack(Character &other);
     virtual char to_char() const;
 };
 

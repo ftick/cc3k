@@ -1,13 +1,14 @@
 #include "character.h"
+#include "../../debug.h"
 #include <algorithm>
 
-Character::Character(int health, int max_health, int atk, int def) :
+Character::Character(int health, int max_health, int atk, int def, int gold) :
   Widget(),
   health(health),
   max_health(max_health),
   atk(atk),
   def(def),
-  gold(0),
+  gold(gold),
   moved(false) {}
 
 bool Character::is_pathable(terrain_t t) const {
@@ -33,19 +34,26 @@ bool Character::move(direction_t dir) {
   return true;
 }
 
-void Character::attack(Character &other) {
-  other.defend(*this);
+int Character::attack(Character &other) {
+  return other.defend(*this);
 }
 
-bool Character::defend(Character &other) {
-  return false;
+int Character::defend(Character &other) {
+  int atk    = 100 * other.get_atk();
+  int def    = 100 + get_def();
+  int damage = atk / def + (atk % def != 0);
+  set_health(get_health() - damage);
+  if (get_health() == 0) get_pos()->set_widget(NULL);
+  return damage;
 }
 
 bool Character::did_move() {
   return moved;
 }
 
-void Character::take_turn() {
+void Character::take_turn() {}
+
+void Character::reset() {
   moved = false;
 }
 
@@ -86,3 +94,5 @@ void Character::set_gold(int new_gold) {
 bool Character::is_alive() {
   return health > 0;
 }
+
+Character::~Character() {}

@@ -4,6 +4,8 @@
 #include "player_character.h"
 
 class Troll : public PlayerCharacter {
+  public:
+    Troll();
 };
 
 #endif

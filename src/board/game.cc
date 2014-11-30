@@ -1,5 +1,10 @@
 #include "game.h"
 #include "../debug.h"
+#include "../widgets/characters/player_characters/shade.h"
+#include "../widgets/characters/player_characters/drow.h"
+#include "../widgets/characters/player_characters/vampire.h"
+#include "../widgets/characters/player_characters/goblin.h"
+#include "../widgets/characters/player_characters/troll.h"
 
 #include <fstream>
 
@@ -28,13 +33,14 @@ direction_t read_direction() {
 PlayerCharacter *select_player_character() {
   char character_code;
   std::cin >> character_code;
-  // switch (character_code) {
-  //   case 's': return new Shade();
-  //   case 'd': return new Drow();
-  //   case 'v': return new Vampire();
-  //   case 'g': return new Goblin();
-  //   case 't': return new Troll();
-  // }
+  switch (character_code) {
+    case 's': return new Shade();
+    case 'd': return new Drow();
+    case 'v': return new Vampire();
+    case 'g': return new Goblin();
+    case 't': return new Troll();
+  }
+  DEBUG("Invalid character...");
   return new PlayerCharacter(120, 120, 25, 25);
 }
 
@@ -88,6 +94,7 @@ void Game::play_floor() {
           DEBUG("Using potion");
           p = c->use(p);
         } else {
+          success = false;
           DEBUG("Not a potion...");
         }
         break;
@@ -95,8 +102,13 @@ void Game::play_floor() {
       case 'a': {
         direction_t dir = read_direction();
         DEBUG("Attacking");
-        //Hostile *h = p->get_cell()->get_neighbour(dir)->get_widget();
-        //p->attack(*h);
+        Widget *w = p->get_pos()->get_neighbour(dir)->get_widget();
+        if (w) {
+          if (Hostile *h = dynamic_cast<Hostile*>(w)) {
+            int damage = p->attack(*h);
+            DEBUG("Dealt " << damage);
+          } else success = false;
+        } else success = false;
         break;
       }
       default: {
@@ -109,9 +121,14 @@ void Game::play_floor() {
     }
 
     DEBUG("Gold: " << pc->get_gold());
+    DEBUG("Health: " << pc->get_health());
+    DEBUG("Atk: " << pc->get_atk());
+    DEBUG("Def: " << pc->get_def());
 
     if (!success) {
       DEBUG("Can't do that!");
+    } else {
+      floor->hostile_turn();
     }
 
     if (p->has_reached_stair()) return;

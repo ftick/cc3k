@@ -11,6 +11,7 @@ class Dragon : public Hostile {
   public:
     Dragon(DragonHoard *hoard);
     char to_char() const;
+    bool move(direction_t dir);
 };
 
 #endif

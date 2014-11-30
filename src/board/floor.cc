@@ -48,8 +48,6 @@ Floor::~Floor() {
 void Floor::generate() {
   int pc_chamber    = rand() % chambers.size();
   int stair_chamber = rand() % chambers.size();
-
-  DEBUG(pc_chamber << " " << stair_chamber);
   
   if (pc_chamber == stair_chamber) {
     stair_chamber = (stair_chamber + 1) % chambers.size();
@@ -82,6 +80,19 @@ void Floor::generate() {
   DEBUG(hostiles.size() << " hostiles added");
 
   DEBUG("Floor generated");
+}
+
+void Floor::hostile_turn() {
+  for (int row = 0; row < FLOOR_ROWS; row++) {
+    for (int col = 0; col < FLOOR_COLS; col++) {
+      if (!grid[row][col]) continue;
+      if (Hostile *h = dynamic_cast<Hostile*>(grid[row][col]->get_widget())) {
+        if (!h->did_move()) h->take_turn();
+      }
+    }
+  }
+
+  for (std::vector<Hostile*>::iterator h = hostiles.begin(); h != hostiles.end(); h++) (*h)->reset();
 }
 
 void Floor::random_chamber_spawn(Widget *w) {

@@ -12,7 +12,7 @@ void Chamber::spawn(Widget *w) {
   int i    = rand() % cells.size();
   int orig = i;
 
-  DEBUG("spawning at " << i << " of " << cells.size());
+  //DEBUG("spawning at " << i << " of " << cells.size());
 
   while (cells[i]->get_widget()) {
     i = (i + 1) % cells.size();

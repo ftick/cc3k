@@ -29,6 +29,7 @@ class Floor {
     ~Floor();
 
     void generate();
+    void hostile_turn();
 
     friend std::istream &operator>>(std::istream &in, Floor &floor);
     friend std::ostream &operator<<(std::ostream &out, Floor &floor);

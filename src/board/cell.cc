@@ -19,7 +19,7 @@ Chamber* Cell::get_chamber() {
 void Cell::set_chamber(Chamber *c) {
   if ((terrain != TILE) || chamber) return;
 
-  DEBUG("Setting cell (" << row << ", " << col << ") to " << c);
+  //DEBUG("Setting cell (" << row << ", " << col << ") to " << c);
 
   chamber = c;
   c->add_cell(this);
@@ -37,20 +37,26 @@ Cell *Cell::get_neighbour(direction_t dir) {
   return neighbours[dir];
 }
 
-Cell *Cell::get_unoccupied_tile_neighbour() {
+direction_t Cell::get_unoccupied_direction() {
   int dir  = rand() % 8;
   int orig = dir;
 
-  while (neighbours[static_cast<direction_t>(dir)]->get_terrain() != TILE ||
+  while (!neighbours[static_cast<direction_t>(dir)] ||
+         neighbours[static_cast<direction_t>(dir)]->get_terrain() != TILE ||
          neighbours[static_cast<direction_t>(dir)]->get_widget()) {
-    dir++;
+    dir = (dir + 1) % 8;
     if (dir == orig) {
       DEBUG("Unoccupied tile neighbour not found!");
-      return NULL;
+      return static_cast<direction_t>(-1);
     }
   }
+  
+  return static_cast<direction_t>(dir);
+}
 
-  return neighbours[static_cast<direction_t>(dir)];
+Cell *Cell::get_unoccupied_tile_neighbour() {
+  direction_t dir = get_unoccupied_direction();
+  return dir == -1 ? NULL : neighbours[dir];
 }
 
 void Cell::set_widget(Widget *w) {

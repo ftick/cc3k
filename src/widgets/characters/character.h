@@ -10,16 +10,17 @@ class Character : public Widget {
     int def;
     int gold;
     bool moved;
-    bool at_stair;
 
   public:
-    Character(int health, int max_health, int atk, int def);
+    Character(int health, int max_health, int atk, int def, int gold=0);
+    virtual ~Character() = 0;
     virtual bool is_pathable(terrain_t t) const;
     virtual bool move(direction_t dir);
-    virtual void attack(Character &other);
-    virtual bool defend(Character &other);
+    virtual int  attack(Character &other);
+    virtual int  defend(Character &other);
     virtual bool did_move();
     virtual void take_turn();
+    virtual void reset();
     virtual int  get_health();
     virtual void set_health(int new_health);
     virtual int  get_atk();
