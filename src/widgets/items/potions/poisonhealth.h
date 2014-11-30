@@ -4,6 +4,9 @@
 #include "potion.h"
 
 class PoisonHealth : public Potion {
+  public:
+    PoisonHealth();
+    PlayerCharacter *use(PlayerCharacter* pc);
 };
 
 #endif
