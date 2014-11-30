@@ -12,6 +12,7 @@ class Dragon : public Hostile {
     Dragon(DragonHoard *hoard);
     char to_char() const;
     bool move(direction_t dir);
+    void take_turn();
 };
 
 #endif

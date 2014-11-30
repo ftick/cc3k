@@ -1,5 +1,6 @@
 #include "cell.h"
 #include "../debug.h"
+#include "../widgets/characters/player_characters/player_character.h"
 #include <cstdlib>
 
 Cell::Cell(int row, int col, TextDisplay *display, terrain_t terrain) : row(row), col(col), display(display), terrain(terrain), widget(NULL), chamber(NULL) {}
@@ -67,19 +68,19 @@ Widget *Cell::get_widget() {
   return widget;
 }
 
+PlayerCharacter *Cell::get_adjacent_player_character() {
+  for (int dir = NO; dir <= NW; ++dir) {
+    Cell *c = get_neighbour(static_cast<direction_t>(dir));
+    if (c && c->get_widget()) {
+      if (PlayerCharacter *pc = dynamic_cast<PlayerCharacter*>(c->get_widget())) {
+        return pc;
+      }
+    }
+  }
+  return NULL;
+}
+
 std::ostream &operator<<(std::ostream &out, Cell &cell) {
   if (cell.widget) return out << cell.widget->to_char();
   else return out << cell.terrain;
-}
-
-std::ostream &operator<<(std::ostream &out, terrain_t terrain) {
-  switch (terrain) {
-    case V_WALL:  return out << '|';
-    case H_WALL:  return out << '-';
-    case TILE:    return out << '.';
-    case DOOR:    return out << '+';
-    case PATHWAY: return out << '#';
-    case STAIR:   return out << '\\';
-    default:      return out << ' ';
-  }
 }

@@ -6,32 +6,13 @@
 
 #include "text_display.h"
 #include "chamber.h"
+#include "terrain_t.h"
+#include "direction_t.h"
 #include "../widgets/widget.h"
 
-enum direction_t {
-  NO,
-  NE,
-  EA,
-  SE,
-  SO,
-  SW,
-  WE,
-  NW
-};
-
-enum terrain_t {
-  V_WALL,
-  H_WALL,
-  TILE,
-  DOOR,
-  PATHWAY,
-  STAIR
-};
-
-std::ostream &operator<<(std::ostream &out, terrain_t terrain);
-
-class Widget;
 class Chamber;
+class Widget;
+class PlayerCharacter;
 
 class Cell {
     int row;
@@ -52,6 +33,7 @@ class Cell {
     Cell *get_neighbour(direction_t dir);
     direction_t get_unoccupied_direction();
     Cell *get_unoccupied_tile_neighbour();
+    PlayerCharacter *get_adjacent_player_character();
     void set_widget(Widget *w);
     Widget *get_widget();
     friend std::ostream &operator<<(std::ostream &out, Cell &cell);

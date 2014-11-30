@@ -120,19 +120,19 @@ void Game::play_floor() {
       }
     }
 
-    DEBUG("Gold: " << pc->get_gold());
-    DEBUG("Health: " << pc->get_health());
-    DEBUG("Atk: " << pc->get_atk());
-    DEBUG("Def: " << pc->get_def());
-
     if (!success) {
       DEBUG("Can't do that!");
     } else {
       floor->hostile_turn();
     }
 
-    if (p->has_reached_stair()) return;
-  } while (!is_lost());
+    DEBUG("Gold: " << pc->get_gold());
+    DEBUG("Health: " << pc->get_health());
+    DEBUG("Atk: " << pc->get_atk());
+    DEBUG("Def: " << pc->get_def());
+  } while (!is_lost() && !p->has_reached_stair());
+
+  std::cout << "Game lost!" << std::endl;
 }
 
 bool Game::is_won() {
