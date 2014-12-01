@@ -6,6 +6,7 @@
 class Drow : public PlayerCharacter {
   public:
     Drow();
+    std::string race();
 };
 
 #endif

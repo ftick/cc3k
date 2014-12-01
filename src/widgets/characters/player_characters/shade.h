@@ -6,6 +6,8 @@
 class Shade : public PlayerCharacter {
   public:
     Shade();
+    int score();
+    std::string race();
 };
 
 #endif

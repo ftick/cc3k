@@ -5,9 +5,9 @@
 #include <climits>
 #include <cstdlib>
 
-Hostile::Hostile(int health, int atk, int def) :
-    Character(health, INT_MAX, atk, def) {
-  set_gold((rand() % 2) ? SMALL_GOLD_PILE : NORMAL_GOLD_PILE);
+Hostile::Hostile(int health, int atk, int def, int gold) :
+    Character(health, INT_MAX, atk, def, gold) {
+  if (gold == -1) set_gold((rand() % 2) ? SMALL_GOLD_PILE : NORMAL_GOLD_PILE);
 }
 
 void Hostile::take_turn() {

@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Wall -Wextra -pedantic -MMD --std=c++03
+CXXFLAGS = -Wall -pedantic -MMD --std=c++03
 
 SRC = ${shell find src -name '*.cc'}
 OBJ = ${SRC:.cc=.o}

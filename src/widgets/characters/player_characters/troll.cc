@@ -1,4 +1,12 @@
 #include "troll.h"
-#include <climits>
 
-Troll::Troll() : PlayerCharacter(120, INT_MAX, 25, 15) {}
+Troll::Troll() : PlayerCharacter(120, 120, 25, 15) {}
+
+void Troll::take_turn() {
+  PlayerCharacter::take_turn();
+  set_health(get_health() + 5);
+}
+
+std::string Troll::race() {
+  return "Troll";
+}

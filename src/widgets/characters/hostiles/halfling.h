@@ -7,6 +7,7 @@ class Halfling : public Hostile {
   public:
     Halfling();
     char to_char() const;
+    int defend(Character &other);
 };
 
 #endif

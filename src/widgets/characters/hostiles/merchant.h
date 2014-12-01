@@ -7,6 +7,7 @@ class Merchant : public Hostile {
   public:
     Merchant();
     char to_char() const;
+    void take_turn();
 };
 
 #endif

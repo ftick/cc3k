@@ -29,7 +29,7 @@ class Character : public Widget {
     virtual void set_def(int new_def);
     virtual int  get_gold();
     virtual void set_gold(int new_gold);
-    bool is_alive();
+    virtual bool is_alive();
 };
 
 #endif

@@ -4,5 +4,5 @@ PoisonHealth::PoisonHealth() : Potion() {}
 
 PlayerCharacter *PoisonHealth::use(PlayerCharacter *pc) {
   pc->set_health(pc->get_health() - 10);
-  return pc;
+  return Potion::use(pc);
 }

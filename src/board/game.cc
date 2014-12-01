@@ -6,7 +6,11 @@
 #include "../widgets/characters/player_characters/goblin.h"
 #include "../widgets/characters/player_characters/troll.h"
 
+#include <cstdlib>
 #include <fstream>
+#include <iostream>
+#include <iomanip>
+#include <sstream>
 
 char default_init_file[] = "./config/default.map";
 
@@ -40,8 +44,9 @@ PlayerCharacter *select_player_character() {
     case 'g': return new Goblin();
     case 't': return new Troll();
   }
-  DEBUG("Invalid character...");
-  return new PlayerCharacter(120, 120, 25, 25);
+  std::cerr << "Invalid choice..." << std::endl;
+  std::exit(1);
+  return NULL;
 }
 
 Game::Game(const char *init_file) :
@@ -66,21 +71,35 @@ void Game::play() {
     floor = new Floor(td, pc);
     *in >> *floor;
     if (random_generation) floor->generate();
-    play_floor();
-    if (!pc->has_reached_stair()) return;
+    play_floor(level);
+    if (!pc->has_reached_stair()) break;
   }
 
-  std::cout << "Game won!" << std::endl;
+  if (!quit) {
+    if (!pc->has_reached_stair()) {
+      std::cout << "Game lost!" << std::endl;
+    } else {
+      std::cout << "Game won!" << std::endl;
+    }
+    std::cout << "Score: " << pc->score() << std::endl;
+  }
 }
 
-void Game::play_floor() {
+void Game::play_floor(int level) {
   PlayerCharacter *p = pc;
+  std::string action = level == 1 ? "Player character has spawned" : "Player character has reached the next level";
+  std::string race = pc->race();
 
   do {
     char command;
     bool success = true;
 
     std::cout << *floor;
+    std::cout << "Race: " << race << " Gold: " << std::setw(56 - race.length()) << std::left << pc->get_gold() << "Floor " << level << std::endl;
+    std::cout << "HP: " << pc->get_health() << std::endl;
+    std::cout << "Atk: " << pc->get_atk() << std::endl;
+    std::cout << "Def: " << pc->get_def() << std::endl;
+    std::cout << "Action: " << action << std::endl;
     std::cin >> command;
 
     pc->take_turn();
@@ -91,7 +110,7 @@ void Game::play_floor() {
       case 'u': {
         direction_t dir = read_direction();
         if (Potion *c = dynamic_cast<Potion *>(p->get_pos()->get_neighbour(dir)->get_widget())) {
-          DEBUG("Using potion");
+          action = "PC uses a potion";
           p = c->use(p);
         } else {
           success = false;
@@ -101,18 +120,24 @@ void Game::play_floor() {
       }
       case 'a': {
         direction_t dir = read_direction();
-        DEBUG("Attacking");
         Widget *w = p->get_pos()->get_neighbour(dir)->get_widget();
         if (w) {
           if (Hostile *h = dynamic_cast<Hostile*>(w)) {
             int damage = p->attack(*h);
-            DEBUG("Dealt " << damage);
+            std::stringstream ss;
+            if (damage == -1) {
+              ss << "PC missed!";
+            } else {
+              ss << "PC dealt " << damage << " to " << h->to_char();
+            }
+            ss << " (" << h->get_health() << " HP)";
+            action = ss.str();
           } else success = false;
         } else success = false;
         break;
       }
       default: {
-        DEBUG("Moving");
+        action = "PC moves";
         char code[2] = { command };
         std::cin >> code[1];
         direction_t dir = decode_direction(code);
@@ -121,18 +146,11 @@ void Game::play_floor() {
     }
 
     if (!success) {
-      DEBUG("Can't do that!");
+      action = "Can't do that!";
     } else {
       floor->hostile_turn();
     }
-
-    DEBUG("Gold: " << pc->get_gold());
-    DEBUG("Health: " << pc->get_health());
-    DEBUG("Atk: " << pc->get_atk());
-    DEBUG("Def: " << pc->get_def());
   } while (!is_lost() && !p->has_reached_stair());
-
-  std::cout << "Game lost!" << std::endl;
 }
 
 bool Game::is_won() {

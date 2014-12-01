@@ -6,6 +6,8 @@
 class Troll : public PlayerCharacter {
   public:
     Troll();
+    void take_turn();
+    std::string race();
 };
 
 #endif

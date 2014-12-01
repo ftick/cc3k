@@ -7,7 +7,7 @@ class Potion : public Item {
   public:
     Potion();
     virtual char to_char() const;
-    virtual PlayerCharacter *use(PlayerCharacter* pc);
+    virtual PlayerCharacter *use(PlayerCharacter *pc);
 };
 
 #endif

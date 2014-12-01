@@ -2,7 +2,8 @@
 #include "../../items/gold/gold.h"
 
 PlayerCharacter::PlayerCharacter(int health, int max_health, int atk, int def) :
-  Character(health, max_health, atk, def) {}
+  Character(health, max_health, atk, def),
+  merchant_attacker(false) {}
 
 void PlayerCharacter::take_turn() {
   Character::take_turn();
@@ -38,6 +39,19 @@ int PlayerCharacter::attack(Character &other) {
   return dmg;
 }
 
+int PlayerCharacter::attack(Merchant &other) {
+  merchant_attacker = true;
+  return attack(static_cast<Hostile&>(other));
+}
+
 void PlayerCharacter::did_kill(Character &other) {
   set_gold(get_gold() + other.get_gold());
+}
+
+bool PlayerCharacter::attacks_merchants() {
+  return merchant_attacker;
+}
+
+int PlayerCharacter::score() {
+  return get_gold();
 }

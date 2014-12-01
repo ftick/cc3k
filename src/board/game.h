@@ -15,7 +15,7 @@ class Game  {
     bool random_generation;
     std::ifstream *in;
 
-    void play_floor();
+    void play_floor(int level);
     
   public:
     Game(const char *init_file);

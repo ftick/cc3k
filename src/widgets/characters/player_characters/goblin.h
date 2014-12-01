@@ -6,6 +6,8 @@
 class Goblin : public PlayerCharacter {
   public:
     Goblin();
+    void did_kill(Character &other);
+    std::string race();
 };
 
 #endif
