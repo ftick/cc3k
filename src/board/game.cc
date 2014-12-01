@@ -5,6 +5,7 @@
 #include "../widgets/characters/player_characters/vampire.h"
 #include "../widgets/characters/player_characters/goblin.h"
 #include "../widgets/characters/player_characters/troll.h"
+#include "../buffs/buff.h"
 
 #include <cstdlib>
 #include <fstream>
@@ -95,10 +96,10 @@ void Game::play_floor(int level) {
     bool success = true;
 
     std::cout << *floor;
-    std::cout << "Race: " << race << " Gold: " << std::setw(56 - race.length()) << std::left << pc->get_gold() << "Floor " << level << std::endl;
-    std::cout << "HP: " << pc->get_health() << std::endl;
-    std::cout << "Atk: " << pc->get_atk() << std::endl;
-    std::cout << "Def: " << pc->get_def() << std::endl;
+    std::cout << "Race: " << race << " Gold: " << std::setw(56 - race.length()) << std::left << p->get_gold() << "Floor " << level << std::endl;
+    std::cout << "HP: " << p->get_health() << std::endl;
+    std::cout << "Atk: " << p->get_atk() << std::endl;
+    std::cout << "Def: " << p->get_def() << std::endl;
     std::cout << "Action: " << action << std::endl;
     std::cin >> command;
 
@@ -151,6 +152,10 @@ void Game::play_floor(int level) {
       floor->hostile_turn();
     }
   } while (!is_lost() && !p->has_reached_stair());
+
+  if (dynamic_cast<Buff*>(p)) {
+    delete p;
+  }
 }
 
 bool Game::is_won() {

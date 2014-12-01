@@ -4,6 +4,8 @@
 #include "potion.h"
 
 class BoostAtk : public Potion {
+  public:
+    PlayerCharacter *use(PlayerCharacter *pc);
 };
 
 #endif

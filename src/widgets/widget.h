@@ -10,7 +10,7 @@ class Widget {
   public:
     Widget();
     virtual void set_pos(Cell *pos);
-    Cell *get_pos() const;
+    virtual Cell *get_pos() const;
     virtual char to_char() const = 0;
     virtual ~Widget() = 0;
 };

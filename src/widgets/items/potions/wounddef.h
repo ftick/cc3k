@@ -4,6 +4,8 @@
 #include "potion.h"
 
 class WoundDef : public Potion {
+  public:
+    PlayerCharacter *use(PlayerCharacter *pc);
 };
 
 #endif
