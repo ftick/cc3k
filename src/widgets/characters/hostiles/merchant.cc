@@ -13,5 +13,7 @@ void Merchant::take_turn() {
     if (pc->attacks_merchants()) {
       Hostile::take_turn();
     }
+  } else {
+    Hostile::take_turn();
   }
 }
