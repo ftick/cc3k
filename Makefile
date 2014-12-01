@@ -5,7 +5,7 @@ SRC = ${shell find src -name '*.cc'}
 OBJ = ${SRC:.cc=.o}
 DEP = ${OBJ:.o=.d}
 
-MAIN = bin/cc3k
+MAIN = cc3k
 
 build: ${SRC} ${MAIN}
 
